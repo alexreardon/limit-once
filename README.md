@@ -3,6 +3,8 @@
 Create a function that caches the result of the first function call.
 
 ```ts
+import { cacheFirst } from 'cache-first';
+
 function sayHello(name: string): string {
   return `Hello ${name}`;
 }

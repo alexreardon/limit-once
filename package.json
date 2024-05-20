@@ -5,6 +5,7 @@
   "keywords": [
     "memoize",
     "memoization",
+    "once",
     "cache",
     "performance"
   ],

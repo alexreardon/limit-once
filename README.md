@@ -1,21 +1,14 @@
-# memoize-first
+# tiny-once
 
-Create a function that caches the result of the first function call. `memoize-first` let's you lazily evaluate a value (using a function), and then hold onto the value forever.
-
-`memoize-first` is a subset of [`memoize-one`](https://github.com/alexreardon/memoize-one) that is all that some projects need.
-
-When the arguments to your memoized function changes:
-
-- `memoize-one`: call the underlying function
-- `memoize-first`: don't call the underlying function
+Create a function that caches the result of the first function call. `tiny-once` let's you lazily evaluate a value (using a function), and then hold onto the value forever.
 
 ```ts
-import { memoizeFirst } from 'memoize-first';
+import { once } from 'tiny-once';
 
 function sayHello(name: string): string {
   return `Hello ${name}`;
 }
-const cached = memoizeFirst(sayHello);
+const cached = once(sayHello);
 
 cached('Alex');
 // sayHello called and "Hello Alex" is returned
@@ -34,11 +27,11 @@ cached('Greg');
 ```ts
 // is-safari.ts
 
-import { memoizeFirst } from 'memoize-first';
+import { once } from 'tiny-once';
 
 // We are caching the result of our 'isSafari()' function as the result
 // of `isSafari()` won't change.
-export const isSafari = memoizeFirst(function isSafari(): boolean {
+export const isSafari = once(function isSafari(): boolean {
   const { userAgent } = navigator;
   return userAgent.includes('AppleWebKit') && !userAgent.includes('Chrome');
 });
@@ -53,13 +46,13 @@ if (isSafari()) {
 
 ```bash
 # yarn
-yarn add memoize-first
+yarn add tiny-once
 
 # npm
-npm install memoize-first
+npm install tiny-once
 
 # bun
-bun add memoize-one
+bun add tiny-once
 ```
 
 ## Cache clearing (`.clear()`)
@@ -67,12 +60,12 @@ bun add memoize-one
 You can clear the cache of a memoized function by using a `.clear()` function that is on your cached function.
 
 ```ts
-import { memoizeFirst } from 'memoize-first';
+import { once } from 'tiny-once';
 
 function sayHello(name: string): string {
   return `Hello ${name}`;
 }
-const cached = memoizeFirst(sayHello);
+const cached = once(sayHello);
 
 cached('Alex');
 // sayHello called and "Hello Alex" is returned.

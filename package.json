@@ -2,7 +2,7 @@
   "name": "memoize-first",
   "author": "Alex Reardon <alexreardon@gmail.com>",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "repository": {
     "type": "git",
@@ -17,6 +17,8 @@
     "build:types": "tsc ./src/memoize-first.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck",
     "prettier:validate": "prettier --debug-check src/**/*.ts test/**/*.ts"
   },
+  "module": "./dist/memoize-first.js",
+  "types": "./dist/memoize-first.d.ts",
   "exports": {
     ".": "./dist/memoize-first.js",
     "./types": "./dist/memoize-first.d.ts"

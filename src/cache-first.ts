@@ -1,26 +1,37 @@
+export type CachedFn<TFunc extends (this: any, ...args: any[]) => any> = {
+  clear: () => void;
+  (this: ThisParameterType<TFunc>, ...args: Parameters<TFunc>): ReturnType<TFunc>;
+};
+
 /**
- * Create a new function that will cache the result of it's first call forever.
- * This is similar to `memoize-one`, except the cache for `memoize-one` can be
- * updated if the arguments change.
+ * Creates a new function that will cache the result of it's first call.
  *
  * @example
-* function sayHello(name: string): string {
-*   return `Hello ${name}`;
-* }
-* const cached = cacheFirst(sayHello);
-*
-* cached('Alex');
-* cached('Sam'); // original result of `sayHello` call is returned
-*/
-export function cacheFirst<TFunc extends (...args: any[]) => any>(
- fn: TFunc,
-): (...args: Parameters<TFunc>) => ReturnType<TFunc> {
- let result: { value: ReturnType<TFunc> } | null = null;
+ * function sayHello(name: string): string {
+ *   return `Hello ${name}`;
+ * }
+ * const cached = cacheFirst(sayHello);
+ *
+ * cached('Alex'); // returns "Hello Alex"
+ * cached('Sam'); // returns "Hello Alex" (underlying `sayHello` function not called)
+ *
+ * cached.clear();
+ *
+ * cached('Sam'); // returns "Hello Sam"
+ */
+export function cacheFirst<TFunc extends (...args: any[]) => any>(fn: TFunc): CachedFn<TFunc> {
+  let cache: { value: ReturnType<TFunc> } | null = null;
 
- return function single(...args: Parameters<TFunc>): ReturnType<TFunc> {
-   if (!result) {
-     result = { value: fn(...args) };
-   }
-   return result.value;
- };
+  function result(this: ThisParameterType<TFunc>, ...args: Parameters<TFunc>): ReturnType<TFunc> {
+    if (!cache) {
+      cache = { value: fn.call(this, ...args) };
+    }
+    return cache.value;
+  }
+
+  result.clear = function clear() {
+    cache = null;
+  };
+
+  return result;
 }

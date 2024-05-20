@@ -9,6 +9,21 @@ test('single argument', () => {
   expect(cached('Alex')).toBe('Hello Alex');
 });
 
+test('single argument (falsey return)', () => {
+  let callCount = 0;
+  function returnFalse() {
+    callCount++;
+    return undefined;
+  }
+  const cached = memoizeFirst(returnFalse);
+
+  expect(cached()).toBe(undefined);
+  expect(callCount).toBe(1);
+
+  expect(cached()).toBe(undefined);
+  expect(callCount).toBe(1);
+});
+
 test('multiple arguments', () => {
   function sum(...numbers: number[]): number {
     return numbers.reduce((acc, current) => acc + current, 0);

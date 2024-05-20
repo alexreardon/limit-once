@@ -19,6 +19,10 @@
     ".": "./dist/cache-first.js",
     "types": "./dist/cache-first.d.ts"
   },
+  "files": [
+    "/dist",
+    "/src"
+  ],
   "engines": {
     "bun": ">=1.1.8"
   },

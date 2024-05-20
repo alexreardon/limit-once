@@ -2,7 +2,12 @@
 
 Create a function that caches the result of the first function call. `memoize-first` let's you lazily evaluate a value (using a function), and then hold onto the value forever.
 
-`memoize-first` similar to my other package [`memoize-one`](https://github.com/alexreardon/memoize-one), except that `memoize-first` won't call the underlying function again when the arguments change.
+`memoize-first` is a subset of [`memoize-one`](https://github.com/alexreardon/memoize-one) that is all that some projects need.
+
+When the arguments to your memoized function changes:
+
+- `memoize-one`: call the underlying function
+- `memoize-first`: don't call the underlying function
 
 ```ts
 import { memoizeFirst } from 'memoize-first';

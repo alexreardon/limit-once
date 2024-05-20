@@ -1,5 +1,5 @@
 {
-  "name": "memoize-first",
+  "name": "tiny-once",
   "description": "Remember the first result of a function call",
   "author": "Alex Reardon <alexreardon@gmail.com>",
   "keywords": [
@@ -13,23 +13,23 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexreardon/memoize-first.git"
+    "url": "https://github.com/alexreardon/tiny-once.git"
   },
   "type": "module",
   "sideEffects": false,
   "scripts": {
     "prepublishOnly": "bun build:clean && bun build:dist && bun build:types",
     "build:clean": "rimraf dist",
-    "build:dist": "bun build ./src/memoize-first.ts --outdir ./dist --format esm",
-    "build:types": "tsc ./src/memoize-first.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck",
+    "build:dist": "bun build ./src/tiny-once.ts --outdir ./dist --format esm",
+    "build:types": "tsc ./src/tiny-once.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck",
     "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",
     "check:typescript": "tsc --noEmit ./src/** ./test/** --skipLibCheck --target es2022"
   },
-  "module": "./dist/memoize-first.js",
-  "types": "./dist/memoize-first.d.ts",
+  "module": "./dist/tiny-once.js",
+  "types": "./dist/tiny-once.d.ts",
   "exports": {
-    ".": "./dist/memoize-first.js",
-    "./types": "./dist/memoize-first.d.ts"
+    ".": "./dist/tiny-once.js",
+    "./types": "./dist/tiny-once.d.ts"
   },
   "files": [
     "/dist",

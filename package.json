@@ -2,6 +2,7 @@
   "name": "cache-first",
   "author": "Alex Reardon <alexreardon@gmail.com>",
   "license": "MIT",
+  "version": "0.1.0",
   "private": false,
   "repository": {
     "type": "git",
@@ -26,6 +27,6 @@
     "prettier": "^3.2.5"
   },
   "peerDependencies": {
-    "typescript": "^5.0.0"
+    "typescript": "^5.4.5"
   }
 }

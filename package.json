@@ -9,6 +9,9 @@
     ".": "./dist/cache-first.js",
     "types": "./dist/cache-first.d.ts"
   },
+  "engines": {
+    "bun": ">=1.1.8"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "prettier": "^3.2.5"

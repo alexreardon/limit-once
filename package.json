@@ -1,10 +1,9 @@
 {
   "name": "cache-first",
-  "module": "src/cache-first.ts",
   "type": "module",
   "scripts": {
     "build": " bun build ./src/cache-first.ts --outdir ./dist --format esm",
-    "build:types": "tsc ./src/cache-first.ts --outDir ./dist --declaration --emitDeclarationOnly"
+    "build:types": "tsc ./src/cache-first.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck"
   },
   "exports": {
     ".": "./dist/cache-first.js",

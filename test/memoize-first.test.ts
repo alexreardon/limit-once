@@ -1,11 +1,11 @@
 import { expect, test, it } from 'bun:test';
-import { cacheFirst } from '../src/cache-first';
+import { memoizeFirst } from '../src/memoize-first';
 
 test('single argument', () => {
   function greeting(name: string): string {
     return `Hello ${name}`;
   }
-  const cached = cacheFirst(greeting);
+  const cached = memoizeFirst(greeting);
   expect(cached('Alex')).toBe('Hello Alex');
 });
 
@@ -13,7 +13,7 @@ test('multiple arguments', () => {
   function sum(...numbers: number[]): number {
     return numbers.reduce((acc, current) => acc + current, 0);
   }
-  const cached = cacheFirst(sum);
+  const cached = memoizeFirst(sum);
   expect(cached(1, 2, 3, 4)).toBe(1 + 2 + 3 + 4);
 });
 
@@ -22,7 +22,7 @@ test('underlying function should only be called once', () => {
   function getCount(): string {
     return `Call count: ${callCount++}`;
   }
-  const cached = cacheFirst(getCount);
+  const cached = memoizeFirst(getCount);
 
   expect(cached()).toBe('Call count: 0');
   expect(cached()).toBe('Call count: 0');
@@ -34,7 +34,7 @@ test('cache clearing', () => {
   function getCount(): string {
     return `Call count: ${callCount++}`;
   }
-  const cached = cacheFirst(getCount);
+  const cached = memoizeFirst(getCount);
 
   expect(cached()).toBe('Call count: 0');
   expect(cached()).toBe('Call count: 0');
@@ -56,7 +56,7 @@ test('if the function throws, the cache should not be set', () => {
 
     return `Call count: ${callCount}`;
   }
-  const cached = cacheFirst(maybeThrow);
+  const cached = memoizeFirst(maybeThrow);
 
   expect(() => cached({ shouldThrow: true })).toThrowError('Call count: 1');
   expect(() => cached({ shouldThrow: true })).toThrowError('Call count: 2');
@@ -75,7 +75,7 @@ test('this binding (.call)', () => {
   function getName(this: { name: string }): string {
     return `name: ${this.name}`;
   }
-  const cached = cacheFirst(getName);
+  const cached = memoizeFirst(getName);
 
   expect(cached.call({ name: 'Alex' })).toBe('name: Alex');
 });
@@ -84,7 +84,7 @@ test('this binding (.apply)', () => {
   function getName(this: { name: string }): string {
     return `name: ${this.name}`;
   }
-  const cached = cacheFirst(getName);
+  const cached = memoizeFirst(getName);
 
   expect(cached.apply({ name: 'Alex' })).toBe('name: Alex');
 });
@@ -94,7 +94,7 @@ test('this binding (.bind)', () => {
     return `name: ${this.name}`;
   }
   const bound = getName.bind({ name: 'Alex' });
-  const cached = cacheFirst(bound);
+  const cached = memoizeFirst(bound);
 
   expect(cached()).toBe('name: Alex');
 });
@@ -103,7 +103,7 @@ test('this binding (implicit)', () => {
   function getName(this: { name: string }): string {
     return `name: ${this.name}`;
   }
-  const cached = cacheFirst(getName);
+  const cached = memoizeFirst(getName);
   const person = {
     name: 'Alex',
     getName: cached,
@@ -122,7 +122,7 @@ test('this binding (arrow function)', () => {
     };
   }
   const result = outer.call({ name: 'Alex' });
-  const cached = cacheFirst(result);
+  const cached = memoizeFirst(result);
 
   expect(cached()).toBe('name: Alex. call count: 1');
   expect(cached()).toBe('name: Alex. call count: 1');
@@ -139,7 +139,7 @@ test('this binding (class property)', () => {
     };
   }
   const person = new Person('Alex');
-  const cached = cacheFirst(person.getName);
+  const cached = memoizeFirst(person.getName);
 
   expect(cached()).toBe('Alex');
 });

@@ -1,23 +1,25 @@
 {
-  "name": "cache-first",
+  "name": "memoize-first",
   "author": "Alex Reardon <alexreardon@gmail.com>",
   "license": "MIT",
   "version": "0.1.0",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexreardon/cache-first.git"
+    "url": "https://github.com/alexreardon/memoize-first.git"
   },
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "bun build ./src/cache-first.ts --outdir ./dist --format esm",
-    "build:types": "tsc ./src/cache-first.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck",
+    "prepublishOnly": "bun build:clean && bun build:dist && bun build:types",
+    "build:clean": "rimraf dist",
+    "build:dist": "bun build ./src/memoize-first.ts --outdir ./dist --format esm",
+    "build:types": "tsc ./src/memoize-first.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck",
     "prettier:validate": "prettier --debug-check src/**/*.ts test/**/*.ts"
   },
   "exports": {
-    ".": "./dist/cache-first.js",
-    "types": "./dist/cache-first.d.ts"
+    ".": "./dist/memoize-first.js",
+    "./types": "./dist/memoize-first.d.ts"
   },
   "files": [
     "/dist",
@@ -28,7 +30,8 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.7"
   },
   "peerDependencies": {
     "typescript": "^5.4.5"

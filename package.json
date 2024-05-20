@@ -1,9 +1,18 @@
 {
   "name": "cache-first",
+  "author": "Alex Reardon <alexreardon@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexreardon/cache-first.git"
+  },
   "type": "module",
+  "sideEffects": false,
   "scripts": {
-    "build": " bun build ./src/cache-first.ts --outdir ./dist --format esm",
-    "build:types": "tsc ./src/cache-first.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck"
+    "build": "bun build ./src/cache-first.ts --outdir ./dist --format esm",
+    "build:types": "tsc ./src/cache-first.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck",
+    "prettier:validate": "prettier --debug-check src/**/*.ts test/**/*.ts"
   },
   "exports": {
     ".": "./dist/cache-first.js",

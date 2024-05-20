@@ -1,6 +1,13 @@
 {
   "name": "memoize-first",
+  "description": "Remember the first result of a function call",
   "author": "Alex Reardon <alexreardon@gmail.com>",
+  "keywords": [
+    "memoize",
+    "memoization",
+    "cache",
+    "performance"
+  ],
   "license": "MIT",
   "version": "0.2.0",
   "private": false,

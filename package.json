@@ -2,6 +2,14 @@
   "name": "cache-first",
   "module": "src/cache-first.ts",
   "type": "module",
+  "scripts": {
+    "build": " bun build ./src/cache-first.ts --outdir ./dist --format esm",
+    "build:types": "tsc ./src/cache-first.ts --outDir ./dist --declaration --emitDeclarationOnly"
+  },
+  "exports": {
+    ".": "./dist/cache-first.js",
+    "types": "./dist/cache-first.d.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "prettier": "^3.2.5"

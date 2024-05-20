@@ -1,15 +1,17 @@
 # cache-first
 
-To install dependencies:
+Create a function that caches the result of the first function call.
 
-```bash
-bun install
+```ts
+function sayHello(name: string): string {
+  return `Hello ${name}`;
+}
+const cached = cacheFirst(sayHello);
+
+cached('Alex'); // returns "Hello Alex"
+cached('Sam'); // returns "Hello Alex" (underlying `sayHello` function not called)
+
+cached.clear();
+
+cached('Sam'); // returns "Hello Sam"
 ```
-
-To run:
-
-```bash
-bun run src/cache-first.ts
-```
-
-This project was created using `bun init` in bun v1.1.8. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.

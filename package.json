@@ -19,18 +19,19 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "prepublishOnly": "bun build:clean && bun build:dist && bun build:types",
+    "prepublishOnly": "bun build:all",
+    "build:all": "bun build:clean && bun build:dist && bun build:types",
     "build:clean": "rimraf dist",
-    "build:dist": "bun build ./src/limit-once.ts --outdir ./dist --format esm",
-    "build:types": "tsc ./src/limit-once.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck",
+    "build:dist": "bun build ./src/once.ts --outdir ./dist --format esm",
+    "build:types": "tsc ./src/once.ts --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck",
     "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",
     "check:typescript": "tsc --noEmit ./src/** ./test/** --skipLibCheck --target es2022"
   },
-  "module": "./dist/limit-once.js",
-  "types": "./dist/limit-once.d.ts",
+  "module": "./dist/once.js",
+  "types": "./dist/once.d.ts",
   "exports": {
-    ".": "./dist/limit-once.js",
-    "./types": "./dist/limit-once.d.ts"
+    ".": "./dist/once.js",
+    "./types": "./dist/once.d.ts"
   },
   "files": [
     "/dist",

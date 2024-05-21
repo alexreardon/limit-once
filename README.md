@@ -2,6 +2,9 @@
 
 Create a `once` function that caches the result of the first function call. `limit-once` let's you lazily evaluate a value (using a function), and then hold onto the value forever.
 
+> [!NOTE]
+> This package is still under construction
+
 Features:
 
 - synchronous variant (TODO`Kb`)

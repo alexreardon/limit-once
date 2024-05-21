@@ -1,3 +1,5 @@
+import { bind } from 'bind-event-listener';
+
 type ResultValue<TFunc extends (this: any, ...args: any[]) => Promise<any>> = Awaited<
   ReturnType<TFunc>
 >;
@@ -39,7 +41,7 @@ export function asyncOnce<TFunc extends (...args: any[]) => Promise<any>>(
     }
 
     const promise: Promise<Result> = new Promise((resolve, reject) => {
-      controller.signal.addEventListener('abort', () => reject(), { once: true });
+      const cleanup = bind(controller.signal, { type: 'abort', listener: () => reject() });
 
       fn.call(this, ...args)
         .then((result: Result) => {
@@ -53,7 +55,11 @@ export function asyncOnce<TFunc extends (...args: any[]) => Promise<any>>(
           // allow the promise to be tried again
           state = { type: 'initial' };
           reject(...args);
-        });
+        })
+        // this isn't needed for functionality,
+        // but it seems like a good idea to unbind the event listener
+        // to prevent possible memory leaks
+        .finally(cleanup);
     });
 
     state = {
@@ -66,9 +72,9 @@ export function asyncOnce<TFunc extends (...args: any[]) => Promise<any>>(
 
   cached.clear = function clear() {
     controller.abort();
-    // TODO: need this?
+    // Need to create a new controller
+    // this the old one has been aborted
     controller = new AbortController();
-    // nothing to do
     state = {
       type: 'initial',
     };

@@ -1,6 +1,13 @@
 # limit-once
 
-Create a function that caches the result of the first function call. `limit-once` let's you lazily evaluate a value (using a function), and then hold onto the value forever.
+Create a `once` function that caches the result of the first function call. `limit-once` let's you lazily evaluate a value (using a function), and then hold onto the value forever.
+
+Features:
+
+- synchronous variant (TODO`Kb`)
+- asynchronous variant for promises (TODO`Kb`)
+- only include the code for the variant(s) you want
+- both variants support cache clearing
 
 ```ts
 import { once } from 'limit-once';

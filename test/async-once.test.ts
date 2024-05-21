@@ -152,4 +152,71 @@ test('cache clearing (promise "settled")', async () => {
   expect(await cached()).toBe(3);
 });
 
-test.todo('cache clearing (promise "pending")', async () => {});
+test('cache clearing (promise "pending")', async (done) => {
+  type Data = { callCount: number };
+  let triggerResolve: () => void = () => {};
+  let callCount = 0;
+  function getCallCount(): Promise<Data> {
+    const data: Data = { callCount: ++callCount };
+    return new Promise((resolve) => {
+      triggerResolve = () => resolve(data);
+    });
+  }
+  const cached = asyncOnce(getCallCount);
+
+  // both of these promises are still pending.
+  const promise1 = cached();
+  const promise2 = cached();
+
+  Promise.allSettled([promise1, promise2]).then((result) => {
+    const [first, second] = result;
+    expect(first.status).toBe('rejected');
+    expect(second.status).toBe('rejected');
+  });
+
+  // will abort the current promise
+  cached.clear();
+  await Promise.allSettled([promise1, promise2]);
+
+  // will now call underlying function again
+  const promise3 = cached();
+  const promise4 = cached();
+
+  Promise.allSettled([promise3, promise4]).then((result) => {
+    const [first, second] = result;
+    invariant(first.status === 'fulfilled');
+    expect(first.value).toEqual({ callCount: 2 });
+
+    invariant(second.status === 'fulfilled');
+    expect(second.value).toEqual({ callCount: 2 });
+    done();
+  });
+
+  triggerResolve();
+});
+
+test('cache clearing (promise "pending") - multiple', (done) => {
+  type Data = { callCount: number };
+  let triggerResolve: () => void = () => {};
+  let callCount = 0;
+  function getCallCount(): Promise<Data> {
+    const data: Data = { callCount: ++callCount };
+    return new Promise((resolve) => {
+      triggerResolve = () => resolve(data);
+    });
+  }
+  const cached = asyncOnce(getCallCount);
+
+  for (let i = 0; i < 10; i++) {
+    Promise.allSettled([cached(), cached()]).then((result) => {
+      const [first, second] = result;
+      expect(first.status).toBe('rejected');
+      expect(second.status).toBe('rejected');
+      if (i === 9) {
+        done();
+      }
+    });
+
+    cached.clear();
+  }
+});

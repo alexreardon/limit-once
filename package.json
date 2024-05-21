@@ -40,6 +40,9 @@
   "engines": {
     "bun": ">=1.1.8"
   },
+  "dependencies": {
+    "bind-event-listener": "^3.0.0"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "prettier": "^3.2.5",

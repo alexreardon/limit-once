@@ -1,4 +1,4 @@
-import { expect, test, it } from 'bun:test';
+import { expect, test } from 'bun:test';
 import { once } from '../src/once';
 
 test('single argument', () => {

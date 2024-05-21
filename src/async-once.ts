@@ -10,7 +10,7 @@ export type CachedFn<TFunc extends (this: any, ...args: any[]) => Promise<any>> 
 type State<T> =
   | { type: 'initial' }
   | { type: 'pending'; promise: Promise<T> }
-  | { type: 'settled'; result: T };
+  | { type: 'fulfilled'; result: T };
 
 export function asyncOnce<TFunc extends (...args: any[]) => Promise<any>>(
   fn: TFunc,
@@ -27,7 +27,7 @@ export function asyncOnce<TFunc extends (...args: any[]) => Promise<any>>(
     this: ThisParameterType<TFunc>,
     ...args: Parameters<TFunc>
   ): ReturnType<CachedFn<TFunc>> {
-    if (state.type === 'settled') {
+    if (state.type === 'fulfilled') {
       // Doing a Promise.resolve() so that
       // this function _always_ returns a promise.
       return Promise.resolve(state.result);
@@ -44,7 +44,7 @@ export function asyncOnce<TFunc extends (...args: any[]) => Promise<any>>(
       fn.call(this, ...args)
         .then((result: Result) => {
           state = {
-            type: 'settled',
+            type: 'fulfilled',
             result,
           };
           resolve(result);

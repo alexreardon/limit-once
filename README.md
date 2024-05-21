@@ -7,10 +7,25 @@ Create a `once` function that caches the result of the first function call. `lim
 
 Features:
 
-- synchronous variant (TODO`Kb`)
-- asynchronous variant for promises (TODO`Kb`)
+- synchronous variant (`0.2 Kb`)
+- asynchronous variant for promises (`1Kb`)
 - only include the code for the variant(s) you want
 - both variants support cache clearing
+
+## Installation
+
+```bash
+# yarn
+yarn add limit-once
+
+# npm
+npm install limit-once
+
+# bun
+bun add limit-once
+```
+
+## Synchronous variant
 
 ```ts
 import { once } from 'limit-once';
@@ -34,38 +49,7 @@ cached('Greg');
 // "Hello Alex" is returned from the cache.
 ```
 
-```ts
-// is-safari.ts
-
-import { once } from 'limit-once';
-
-// We are caching the result of our 'isSafari()' function as the result
-// of `isSafari()` won't change.
-export const isSafari = once(function isSafari(): boolean {
-  const { userAgent } = navigator;
-  return userAgent.includes('AppleWebKit') && !userAgent.includes('Chrome');
-});
-
-// app.ts
-if (isSafari()) {
-  applySafariFix();
-}
-```
-
-## Installation
-
-```bash
-# yarn
-yarn add limit-once
-
-# npm
-npm install limit-once
-
-# bun
-bun add limit-once
-```
-
-## Cache clearing (`.clear()`)
+### Cache clearing (`.clear()`)
 
 You can clear the cache of a memoized function by using a `.clear()` function that is on your cached function.
 
@@ -92,4 +76,28 @@ cached('Greg');
 // sayHello is called and "Hello Greg" is returned.
 // "Hello Greg" is put into the cache
 // "Hello Greg" is returned.
+```
+
+## Async variant
+
+```ts
+import { onceAsync } from 'limit-once/async';
+
+export const getLoggedInUser = onceAsync(async function getLoggedInUser(): Promise<User> {
+  await fetch('/user').json();
+});
+```
+
+```ts
+const user1 = await getLoggedInUser();
+// after result is calculated, `fetch` won't be called again
+const user2 = await getLoggedInUser();
+```
+
+```ts
+// will kick off the `fetch` call
+const promise1 = getLoggedInUser();
+
+// will get the same promise back as ... TODO
+const promise2 = getLoggedInUser();
 ```

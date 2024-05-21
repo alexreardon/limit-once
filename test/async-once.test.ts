@@ -195,6 +195,19 @@ test('cache clearing (promise "pending")', async (done) => {
   triggerResolve();
 });
 
+test('cache clearing (promise "pending") - simple', async (done) => {
+  async function getName(): Promise<string> {
+    return 'Alex';
+  }
+
+  const getNameOnce = asyncOnce(getName);
+
+  getNameOnce().catch(done);
+
+  // getName will still be "pending"
+  getNameOnce.clear();
+});
+
 test('cache clearing (promise "pending") - multiple', (done) => {
   type Data = { callCount: number };
   let triggerResolve: () => void = () => {};

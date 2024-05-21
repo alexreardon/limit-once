@@ -30,74 +30,162 @@ bun add limit-once
 ```ts
 import { once } from 'limit-once';
 
-function sayHello(name: string): string {
+function getGreeting(name: string): string {
   return `Hello ${name}`;
 }
-const cached = once(sayHello);
+const getGreetingOnce = once(getGreeting);
 
-cached('Alex');
-// sayHello called and "Hello Alex" is returned
+getGreetingOnce('Alex');
+// getGreeting called and "Hello Alex" is returned
 // "Hello Alex" is put into the cache.
 // returns "Hello Alex"
 
-cached('Sam');
-// sayHello is not called
+getGreetingOnce('Sam');
+// getGreeting is not called
 // "Hello Alex" is returned from the cache.
 
-cached('Greg');
-// sayHello is not called
+getGreetingOnce('Greg');
+// getGreeting is not called
 // "Hello Alex" is returned from the cache.
 ```
 
 ### Cache clearing (`.clear()`)
 
-You can clear the cache of a memoized function by using a `.clear()` function that is on your cached function.
+You can clear the cache of a onced function by using the `.clear()` function property.
 
 ```ts
 import { once } from 'limit-once';
 
-function sayHello(name: string): string {
+function getGreeting(name: string): string {
   return `Hello ${name}`;
 }
-const cached = once(sayHello);
+const getGreetingOnce = once(getGreeting);
 
-cached('Alex');
-// sayHello called and "Hello Alex" is returned.
+getGreetingOnce('Alex');
+// getGreeting called and "Hello Alex" is returned.
 // "Hello Alex" is put into the cache
-// cached function returns "Hello Alex"
+// getGreetingOnce function returns "Hello Alex"
 
-cached('Sam');
-// sayHello is not called
+getGreetingOnce('Sam');
+// getGreeting is not called
 // "Hello Alex" is returned from cache
 
-cached.clear();
+getGreetingOnce.clear();
 
-cached('Greg');
-// sayHello is called and "Hello Greg" is returned.
+getGreetingOnce('Greg');
+// getGreeting is called and "Hello Greg" is returned.
 // "Hello Greg" is put into the cache
 // "Hello Greg" is returned.
 ```
 
-## Async variant
+## Asynchronous variant (`limit-once/async`)
+
+Our async variant allows you to have a `once` functionality for functions that `Promise`.
 
 ```ts
 import { onceAsync } from 'limit-once/async';
 
-export const getLoggedInUser = onceAsync(async function getLoggedInUser(): Promise<User> {
+async function getLoggedInUser() {
   await fetch('/user').json();
+}
+
+// We don't want every call to `getLoggedInUser()` to call `fetch` again.
+// Ideally we would store the result of the first successful call and return that!
+
+const getLoggedInUserOnce = asyncOnce(getLoggedInUser);
+
+const user1 = await getLoggedInUserOnce();
+
+// subsequent calls won't call fetch, and will return the previously fulfilled promise value.
+const user2 = await getLoggedInUserOnce();
+```
+
+A "rejected" promise call will not be cached and will allow the wrapped function to be called again
+
+```ts
+import { onceAsync } from 'limit-once/async';
+
+let callCount = 0;
+async function maybeThrow({ shouldThrow }: { shouldThrow: boolean }): Promise<string> {
+  callCount++;
+
+  if (shouldThrow) {
+    throw new Error(`Call count: ${callCount}`);
+  }
+
+  return `Call count: ${callCount}`;
+}
+const maybeThrowOnce = asyncOnce(maybeThrow);
+
+expect(async () => await maybeThrowOnce({ shouldThrow: true })).toThrowError('Call count: 1');
+
+// failure result was not cached, underlying `maybeThrow` called again
+expect(async () => await maybeThrowOnce({ shouldThrow: true })).toThrowError('Call count: 2');
+
+// our first successful result will be cached
+expect(await maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
+expect(await maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
+```
+
+If multiple calls are made to the onced function while the original promise is still `"pending"`, then the original promise is re-used. This prevents multiple calls to the underlying function.
+
+```ts
+import { onceAsync } from 'limit-once/async';
+
+async function getLoggedInUser() {
+  await fetch('/user').json();
+}
+
+export const getLoggedInUserOnce = asyncOnce(getLoggedInUser);
+
+const promise1 = getLoggedInUserOnce();
+
+// This second call to `getLoggedInUserOnce` while the `getLoggedInUser` promise
+// is still "pending" will return the same promise that the first call created.
+const promise2 = getLoggedInUserOnce();
+
+console.log(promise1 === promise2); // "true"
+```
+
+### Cache clearing (`.clear()`)
+
+You can clear the cache of a onced async function by using the `.clear()` function property.
+
+```ts
+import { onceAsync } from 'limit-once/async';
+
+let callCount = 0;
+async function getCallCount(): Promise<string> {
+  return `Call count: ${callCount}`;
+}
+
+const onced = asyncOnce(getCallCount);
+
+expect(await onced({ shouldThrow: false })).toBe('Call count: 1');
+expect(await onced({ shouldThrow: false })).toBe('Call count: 1');
+
+onced.clear();
+
+expect(await onced({ shouldThrow: false })).toBe('Call count: 2');
+expect(await onced({ shouldThrow: false })).toBe('Call count: 2');
+```
+
+If onced async function is `"pending"` when `.clear()` is called, then the promise will be rejected.
+
+```ts
+import { onceAsync } from 'limit-once/async';
+
+async function getName(): Promise<string> {
+  return 'Alex';
+}
+
+const getNameOnce = asyncOnce(getName);
+
+const promise1 = getNameOnce().catch(() => {
+  console.log('rejected');
 });
-```
 
-```ts
-const user1 = await getLoggedInUser();
-// after result is calculated, `fetch` won't be called again
-const user2 = await getLoggedInUser();
-```
-
-```ts
-// will kick off the `fetch` call
-const promise1 = getLoggedInUser();
-
-// will get the same promise back as ... TODO
-const promise2 = getLoggedInUser();
+// cached cleared while promise was pending
+// will cause `promise1` to be rejected
+getNameOnce.clear();
 ```

@@ -1,9 +1,9 @@
-# tiny-once
+# limit-once
 
-Create a function that caches the result of the first function call. `tiny-once` let's you lazily evaluate a value (using a function), and then hold onto the value forever.
+Create a function that caches the result of the first function call. `limit-once` let's you lazily evaluate a value (using a function), and then hold onto the value forever.
 
 ```ts
-import { once } from 'tiny-once';
+import { once } from 'limit-once';
 
 function sayHello(name: string): string {
   return `Hello ${name}`;
@@ -27,7 +27,7 @@ cached('Greg');
 ```ts
 // is-safari.ts
 
-import { once } from 'tiny-once';
+import { once } from 'limit-once';
 
 // We are caching the result of our 'isSafari()' function as the result
 // of `isSafari()` won't change.
@@ -46,13 +46,13 @@ if (isSafari()) {
 
 ```bash
 # yarn
-yarn add tiny-once
+yarn add limit-once
 
 # npm
-npm install tiny-once
+npm install limit-once
 
 # bun
-bun add tiny-once
+bun add limit-once
 ```
 
 ## Cache clearing (`.clear()`)
@@ -60,7 +60,7 @@ bun add tiny-once
 You can clear the cache of a memoized function by using a `.clear()` function that is on your cached function.
 
 ```ts
-import { once } from 'tiny-once';
+import { once } from 'limit-once';
 
 function sayHello(name: string): string {
   return `Hello ${name}`;

@@ -78,7 +78,7 @@ getGreetingOnce('Greg');
 // "Hello Greg" is returned.
 ```
 
-## Asynchronous variant (`limit-once/async`)
+## Asynchronous variant
 
 Our async variant allows you to have a `once` functionality for functions that `Promise`.
 

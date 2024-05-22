@@ -31,7 +31,7 @@
   "types": "./dist/once.d.ts",
   "exports": {
     ".": "./dist/once.js",
-    "./async": "./dist/async-once.js",
+    "./async": "./dist/once-async.js",
     "./types": "./dist/once.d.ts"
   },
   "files": [

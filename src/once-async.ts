@@ -1,4 +1,4 @@
-import { bind } from 'bind-event-listener';
+// import { bind } from 'bind-event-listener';
 
 type ResultValue<TFunc extends (this: any, ...args: any[]) => Promise<any>> = Awaited<
   ReturnType<TFunc>
@@ -41,7 +41,11 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
     }
 
     const promise: Promise<Result> = new Promise((resolve, reject) => {
-      const cleanup = bind(controller.signal, { type: 'abort', listener: () => reject() });
+      function listener() {
+        reject();
+      }
+      // const cleanup = bind(controller.signal, { type: 'abort', listener: () => reject() });
+      controller.signal.addEventListener('abort', listener);
 
       fn.call(this, ...args)
         .then((result: Result) => {
@@ -59,7 +63,7 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
         // this isn't needed for functionality,
         // but it seems like a good idea to unbind the event listener
         // to prevent possible memory leaks
-        .finally(cleanup);
+        .finally(() => controller.signal.removeEventListener('abort', listener));
     });
 
     state = {

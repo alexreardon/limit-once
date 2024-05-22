@@ -7,10 +7,12 @@ Create a `once` function that caches the result of the first function call. `lim
 
 Features:
 
-- synchronous variant (`0.2 Kb`)
-- asynchronous variant for promises (`1Kb`)
-- only include the code for the variant(s) you want
-- both variants support cache clearing
+- [Synchronous variant](#synchronous-variant) (`150B`)
+- [Asynchronous variant for promises](#asynchronous-variant) (`420B`)
+- Only include the code for the variant(s) you want
+- Both variants support cache clearing (avoid memory leaks)
+- Both variants respect `this` control
+- Full `TypeScript` support
 
 ## Installation
 

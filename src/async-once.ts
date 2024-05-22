@@ -73,7 +73,7 @@ export function asyncOnce<TFunc extends (...args: any[]) => Promise<any>>(
   cached.clear = function clear() {
     controller.abort();
     // Need to create a new controller
-    // this the old one has been aborted
+    // as the old one has been aborted
     controller = new AbortController();
     state = {
       type: 'initial',

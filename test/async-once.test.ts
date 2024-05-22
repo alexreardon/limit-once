@@ -1,12 +1,12 @@
 import { expect, test, it } from 'bun:test';
-import { asyncOnce } from '../src/async-once';
+import { onceAsync } from '../src/async-once';
 import invariant from 'tiny-invariant';
 
 test('simple', async () => {
   async function greeting(name: string): Promise<string> {
     return `Hello ${name}`;
   }
-  const cachedGreeting = asyncOnce(greeting);
+  const cachedGreeting = onceAsync(greeting);
 
   expect(await cachedGreeting('Alex')).toBe('Hello Alex');
 });
@@ -22,7 +22,7 @@ test('a function that throws should not be cached', async () => {
 
     return `Call count: ${callCount}`;
   }
-  const cached = asyncOnce(maybeThrow);
+  const cached = onceAsync(maybeThrow);
 
   expect(async () => await cached({ shouldThrow: true })).toThrowError('Call count: 1');
   expect(async () => await cached({ shouldThrow: true })).toThrowError('Call count: 2');
@@ -43,7 +43,7 @@ test('a function that rejects should not be cached', async () => {
       return resolve(`Call count: ${callCount}`);
     });
   }
-  const cached = asyncOnce(maybeResolve);
+  const cached = onceAsync(maybeResolve);
 
   expect(async () => await cached({ shouldResolve: false })).toThrowError('Call count: 1');
   expect(async () => await cached({ shouldResolve: false })).toThrowError('Call count: 2');
@@ -58,7 +58,7 @@ test('asking for a settled promise', async () => {
   async function getUser(): Promise<User> {
     return { callCount: ++callCount };
   }
-  const cached = asyncOnce(getUser);
+  const cached = onceAsync(getUser);
 
   const user = await cached();
   expect(user).toEqual({ callCount: 1 });
@@ -80,7 +80,7 @@ test('joining a pending promise (which gets fulfilled)', (done) => {
       triggerResolve = resolve;
     });
   }
-  const cached = asyncOnce(getUser);
+  const cached = onceAsync(getUser);
 
   const promise1 = cached();
   const promise2 = cached();
@@ -112,7 +112,7 @@ test('joining a pending promise (which gets rejected)', (done) => {
       void resolve;
     });
   }
-  const cached = asyncOnce(getUser);
+  const cached = onceAsync(getUser);
 
   const promise1 = cached();
   const promise2 = cached();
@@ -136,7 +136,7 @@ test('cache clearing (promise "settled")', async () => {
     callCount++;
     return Promise.resolve(callCount);
   }
-  const cached = asyncOnce(getCallCount);
+  const cached = onceAsync(getCallCount);
 
   expect(await cached()).toBe(1);
   expect(await cached()).toBe(1);
@@ -162,7 +162,7 @@ test('cache clearing (promise "pending")', async (done) => {
       triggerResolve = () => resolve(data);
     });
   }
-  const cached = asyncOnce(getCallCount);
+  const cached = onceAsync(getCallCount);
 
   // both of these promises are still pending.
   const promise1 = cached();
@@ -200,7 +200,7 @@ test('cache clearing (promise "pending") - simple', async (done) => {
     return 'Alex';
   }
 
-  const getNameOnce = asyncOnce(getName);
+  const getNameOnce = onceAsync(getName);
 
   getNameOnce().catch(done);
 
@@ -218,7 +218,7 @@ test('cache clearing (promise "pending") - multiple', (done) => {
       triggerResolve = () => resolve(data);
     });
   }
-  const cached = asyncOnce(getCallCount);
+  const cached = onceAsync(getCallCount);
 
   for (let i = 0; i < 10; i++) {
     Promise.allSettled([cached(), cached()]).then((result) => {

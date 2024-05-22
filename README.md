@@ -92,7 +92,7 @@ async function getLoggedInUser() {
 // We don't want every call to `getLoggedInUser()` to call `fetch` again.
 // Ideally we would store the result of the first successful call and return that!
 
-const getLoggedInUserOnce = asyncOnce(getLoggedInUser);
+const getLoggedInUserOnce = onceAsync(getLoggedInUser);
 
 const user1 = await getLoggedInUserOnce();
 
@@ -115,7 +115,7 @@ async function maybeThrow({ shouldThrow }: { shouldThrow: boolean }): Promise<st
 
   return `Call count: ${callCount}`;
 }
-const maybeThrowOnce = asyncOnce(maybeThrow);
+const maybeThrowOnce = onceAsync(maybeThrow);
 
 expect(async () => await maybeThrowOnce({ shouldThrow: true })).toThrowError('Call count: 1');
 
@@ -136,7 +136,7 @@ async function getLoggedInUser() {
   await fetch('/user').json();
 }
 
-export const getLoggedInUserOnce = asyncOnce(getLoggedInUser);
+export const getLoggedInUserOnce = onceAsync(getLoggedInUser);
 
 const promise1 = getLoggedInUserOnce();
 
@@ -159,7 +159,7 @@ async function getCallCount(): Promise<string> {
   return `Call count: ${callCount}`;
 }
 
-const onced = asyncOnce(getCallCount);
+const onced = onceAsync(getCallCount);
 
 expect(await onced({ shouldThrow: false })).toBe('Call count: 1');
 expect(await onced({ shouldThrow: false })).toBe('Call count: 1');
@@ -179,7 +179,7 @@ async function getName(): Promise<string> {
   return 'Alex';
 }
 
-const getNameOnce = asyncOnce(getName);
+const getNameOnce = onceAsync(getName);
 
 const promise1 = getNameOnce().catch(() => {
   console.log('rejected');

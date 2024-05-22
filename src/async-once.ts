@@ -14,7 +14,7 @@ type State<T> =
   | { type: 'pending'; promise: Promise<T> }
   | { type: 'fulfilled'; result: T };
 
-export function asyncOnce<TFunc extends (...args: any[]) => Promise<any>>(
+export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
   fn: TFunc,
 ): CachedFn<TFunc> {
   type Result = ResultValue<TFunc>;

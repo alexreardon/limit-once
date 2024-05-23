@@ -20,9 +20,10 @@
   "sideEffects": false,
   "scripts": {
     "prepublishOnly": "bun build:all",
-    "build:all": "bun build:clean && bun build:dist && bun build:types",
+    "build:all": "bun build:clean && bun build:dist:esm && bun build:dist:cjs && bun build:types",
     "build:clean": "rimraf dist",
-    "build:dist": "bun build --entry-points ./src/* --outdir ./dist/esm --external '*'",
+    "build:dist:esm": "esbuild ./src/* --outdir=./dist/esm --format=esm",
+    "build:dist:cjs": "esbuild ./src/* --outdir=./dist/cjs --format=cjs",
     "build:types": "tsc ./src/* --outDir ./dist/esm --declaration --emitDeclarationOnly --skipLibCheck",
     "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",
     "check:typescript": "tsc --noEmit ./src/** ./test/** --skipLibCheck --target es2022"
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "esbuild": "^0.21.3",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.7",
     "tiny-invariant": "^1.3.3"

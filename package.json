@@ -25,8 +25,9 @@
     "build:dist:esm": "esbuild ./src/* --outdir=./dist/esm --format=esm",
     "build:dist:cjs": "esbuild ./src/* --outdir=./dist/cjs --format=cjs",
     "build:types": "tsc ./src/* --outDir ./dist/esm --declaration --emitDeclarationOnly --skipLibCheck",
+    "check:all": "bun check:prettier && bun check:typescript",
     "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",
-    "check:typescript": "tsc --noEmit ./src/** ./test/** --skipLibCheck --target es2022"
+    "check:typescript": "tsc"
   },
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",

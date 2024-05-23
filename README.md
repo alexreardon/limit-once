@@ -8,7 +8,7 @@ Create a `once` function that caches the result of the first function call. `lim
 Features:
 
 - [Synchronous variant](#synchronous-variant) (`150B`)
-- [Asynchronous variant for promises](#asynchronous-variant) (`420B`)
+- [Asynchronous variant for promises](#asynchronous-variant) (`460B`)
 - Only include the code for the variant(s) you want
 - Both variants support cache clearing (avoid memory leaks)
 - Both variants respect `this` control
@@ -85,7 +85,7 @@ getGreetingOnce('Greg');
 Our async variant allows you to have a `once` functionality for functions that `Promise`.
 
 ```ts
-import { onceAsync } from 'limit-once/async';
+import { onceAsync } from 'limit-once';
 
 async function getLoggedInUser() {
   await fetch('/user').json();
@@ -105,7 +105,7 @@ const user2 = await getLoggedInUserOnce();
 A "rejected" promise call will not be cached and will allow the wrapped function to be called again
 
 ```ts
-import { onceAsync } from 'limit-once/async';
+import { onceAsync } from 'limit-once';
 
 let callCount = 0;
 async function maybeThrow({ shouldThrow }: { shouldThrow: boolean }): Promise<string> {
@@ -132,7 +132,7 @@ expect(await maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 If multiple calls are made to the onced function while the original promise is still `"pending"`, then the original promise is re-used. This prevents multiple calls to the underlying function.
 
 ```ts
-import { onceAsync } from 'limit-once/async';
+import { onceAsync } from 'limit-once';
 
 async function getLoggedInUser() {
   await fetch('/user').json();
@@ -154,7 +154,7 @@ console.log(promise1 === promise2); // "true"
 You can clear the cache of a onced async function by using the `.clear()` function property.
 
 ```ts
-import { onceAsync } from 'limit-once/async';
+import { onceAsync } from 'limit-once';
 
 let callCount = 0;
 async function getCallCount(): Promise<string> {
@@ -175,7 +175,7 @@ expect(await onced({ shouldThrow: false })).toBe('Call count: 2');
 If onced async function is `"pending"` when `.clear()` is called, then the promise will be rejected.
 
 ```ts
-import { onceAsync } from 'limit-once/async';
+import { onceAsync } from 'limit-once';
 
 async function getName(): Promise<string> {
   return 'Alex';

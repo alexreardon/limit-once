@@ -22,17 +22,16 @@
     "prepublishOnly": "bun build:all",
     "build:all": "bun build:clean && bun build:dist && bun build:types",
     "build:clean": "rimraf dist",
-    "build:dist": "bun build --entry-points ./src/* --outdir ./dist --format esm --external '*'",
-    "build:types": "tsc ./src/* --outDir ./dist --declaration --emitDeclarationOnly --skipLibCheck",
+    "build:dist": "bun build --entry-points ./src/* --outdir ./dist/esm --external '*'",
+    "build:types": "tsc ./src/* --outDir ./dist/esm --declaration --emitDeclarationOnly --skipLibCheck",
     "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",
     "check:typescript": "tsc --noEmit ./src/** ./test/** --skipLibCheck --target es2022"
   },
-  "module": "./dist/once.js",
-  "types": "./dist/once.d.ts",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "exports": {
-    ".": "./dist/once.js",
-    "./async": "./dist/once-async.js",
-    "./types": "./dist/once.d.ts"
+    ".": "./dist/esm/index.js",
+    "./types": "./dist/esm/index.d.ts"
   },
   "files": [
     "/dist",

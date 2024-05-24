@@ -7,8 +7,8 @@ Create a `once` function that caches the result of the first function call. `lim
 
 Features:
 
-- [Synchronous variant](#synchronous-variant) (`150B`)
-- [Asynchronous variant for promises](#asynchronous-variant) (`460B`)
+- [Synchronous variant](#synchronous-variant) (tiny `150B`)
+- [Asynchronous variant for promises](#asynchronous-variant) (tiny `372B`)
 - Only include the code for the variant(s) you want
 - Both variants support cache clearing (avoid memory leaks)
 - Both variants respect `this` control
@@ -102,7 +102,7 @@ const user1 = await getLoggedInUserOnce();
 const user2 = await getLoggedInUserOnce();
 ```
 
-A "rejected" promise call will not be cached and will allow the wrapped function to be called again
+If the wrapped function that returns a promise has it's promise `"rejected"`, then the call will not be cached, and the underlying function can be called again.
 
 ```ts
 import { onceAsync } from 'limit-once';
@@ -172,7 +172,7 @@ expect(await onced({ shouldThrow: false })).toBe('Call count: 2');
 expect(await onced({ shouldThrow: false })).toBe('Call count: 2');
 ```
 
-If onced async function is `"pending"` when `.clear()` is called, then the promise will be rejected.
+If onced async function is `"pending"` when `.clear()` is called, then the promise(s) that the onced function has returned will be rejected.
 
 ```ts
 import { onceAsync } from 'limit-once';
@@ -184,10 +184,17 @@ async function getName(): Promise<string> {
 const getNameOnce = onceAsync(getName);
 
 const promise1 = getNameOnce().catch(() => {
-  console.log('rejected');
+  console.log('rejected promise 1');
+});
+
+const promise2 = getNameOnce().catch(() => {
+  console.log('rejected promise 2');
 });
 
 // cached cleared while promise was pending
 // will cause `promise1` to be rejected
 getNameOnce.clear();
+
+// console.log → "rejected promise 1"
+// console.log → "rejected promise 2"
 ```

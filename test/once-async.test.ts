@@ -233,3 +233,29 @@ test('cache clearing (promise "pending") - multiple', (done) => {
     cached.clear();
   }
 });
+
+test('cache clearing (promise "pending") - cleared sync after creation', async () => {
+  let callCount = 0;
+  function getCallCount(): Promise<string> {
+    return new Promise((resolve) => {
+      // constructor called synonymously
+      resolve(`Call count: ${++callCount}`);
+    });
+  }
+
+  const getCallCountOnce = onceAsync(getCallCount);
+
+  const promise1 = getCallCountOnce();
+  expect(callCount).toBe(1);
+
+  getCallCountOnce.clear();
+
+  const promise2 = getCallCountOnce();
+  expect(callCount).toBe(2);
+
+  const result = await Promise.allSettled([promise1, promise2]);
+  const [first, second] = result;
+  expect(first.status).toBe('rejected');
+  invariant(second.status === 'fulfilled');
+  expect(second.value).toBe('Call count: 2');
+});

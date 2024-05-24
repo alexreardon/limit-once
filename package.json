@@ -30,9 +30,7 @@
   "engines": {
     "bun": ">=1.1.8"
   },
-  "dependencies": {
-    "bind-event-listener": "^3.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/bun": "latest",
     "esbuild": "^0.21.3",

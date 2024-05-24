@@ -1,5 +1,3 @@
-import { bind } from 'bind-event-listener';
-
 type ResultValue<TFunc extends (this: any, ...args: any[]) => Promise<any>> = Awaited<
   ReturnType<TFunc>
 >;
@@ -11,7 +9,7 @@ export type CachedFn<TFunc extends (this: any, ...args: any[]) => Promise<any>> 
 
 type State<T> =
   | { type: 'initial' }
-  | { type: 'pending'; promise: Promise<T> }
+  | { type: 'pending'; promise: Promise<T>; abort: () => void }
   | { type: 'fulfilled'; result: T };
 
 export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
@@ -22,8 +20,6 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
   let state: State<Result> = {
     type: 'initial',
   };
-
-  let controller = new AbortController();
 
   function cached(
     this: ThisParameterType<TFunc>,
@@ -40,9 +36,13 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
       return state.promise;
     }
 
-    const promise: Promise<Result> = new Promise((resolve, reject) => {
-      const cleanup = bind(controller.signal, { type: 'abort', listener: () => reject() });
+    let rejectPendingPromise: (() => void) | null;
+    function abort() {
+      rejectPendingPromise?.();
+    }
 
+    const promise: Promise<Result> = new Promise((resolve, reject) => {
+      rejectPendingPromise = reject;
       fn.call(this, ...args)
         .then((result: Result) => {
           state = {
@@ -55,26 +55,23 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
           // allow the promise to be tried again
           state = { type: 'initial' };
           reject(...args);
-        })
-        // this isn't needed for functionality,
-        // but it seems like a good idea to unbind the event listener
-        // to prevent possible memory leaks
-        .finally(cleanup);
+        });
     });
 
     state = {
       type: 'pending',
       promise,
+      abort,
     };
 
     return promise;
   }
 
   cached.clear = function clear() {
-    controller.abort();
-    // Need to create a new controller
-    // as the old one has been aborted
-    controller = new AbortController();
+    if (state.type === 'pending') {
+      state.abort();
+    }
+
     state = {
       type: 'initial',
     };

@@ -21,7 +21,7 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
     type: 'initial',
   };
 
-  function cached(
+  function onced(
     this: ThisParameterType<TFunc>,
     ...args: Parameters<TFunc>
   ): ReturnType<CachedFn<TFunc>> {
@@ -67,7 +67,7 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
     return promise;
   }
 
-  cached.clear = function clear() {
+  onced.clear = function clear() {
     if (state.type === 'pending') {
       state.abort();
     }
@@ -77,5 +77,5 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
     };
   };
 
-  return cached;
+  return onced;
 }

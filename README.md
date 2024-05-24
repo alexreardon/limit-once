@@ -1,6 +1,6 @@
 # limit-once
 
-Create a `once` function that caches the result of the first function call. `limit-once` let's you lazily evaluate a value (using a function), and then hold onto the value forever.
+Gives you the ability to ensure a `function` is only called `"once"`, and that that the result of that single `function` call is returned every time.
 
 > [!NOTE]
 > This package is still under construction
@@ -29,6 +29,8 @@ bun add limit-once
 
 ## Synchronous variant
 
+Create a new `function` that wraps an existing function, where the wrapped function is only called once.
+
 ```ts
 import { once } from 'limit-once';
 
@@ -49,6 +51,33 @@ getGreetingOnce('Sam');
 getGreetingOnce('Greg');
 // getGreeting is not called
 // "Hello Alex" is returned from the cache.
+```
+
+If the function being wrapped `throw`s an error, then that `throw` is not cached, and the wrapped function is allowed to be called again
+
+```ts
+import { once } from 'limit-once';
+
+let callCount = 0;
+function maybeThrow({ shouldThrow }: { shouldThrow: boolean }): string {
+  callCount++;
+
+  if (shouldThrow) {
+    throw new Error(`Call count: ${callCount}`);
+  }
+
+  return `Call count: ${callCount}`;
+}
+const maybeThrowOnce = once(maybeThrow);
+
+expect(() => maybeThrowOnce({ shouldThrow: true })).toThrowError('Call count: 1');
+
+// failure result was not cached, underlying `maybeThrow` called again
+expect(() => maybeThrowOnce({ shouldThrow: true })).toThrowError('Call count: 2');
+
+// our first successful result will be cached
+expect(maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
+expect(maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 ```
 
 ### Cache clearing (`.clear()`)

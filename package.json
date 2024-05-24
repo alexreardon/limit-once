@@ -16,24 +16,12 @@
     "type": "git",
     "url": "https://github.com/alexreardon/limit-once.git"
   },
-  "type": "module",
   "sideEffects": false,
-  "scripts": {
-    "prepublishOnly": "bun build:all",
-    "build:all": "bun build:clean && bun build:dist:esm && bun build:dist:cjs && bun build:types",
-    "build:clean": "rimraf dist",
-    "build:dist:esm": "esbuild ./src/* --outdir=./dist/esm --format=esm",
-    "build:dist:cjs": "esbuild ./src/* --outdir=./dist/cjs --format=cjs",
-    "build:types": "tsc ./src/* --outDir ./dist/esm --declaration --emitDeclarationOnly --skipLibCheck",
-    "check:all": "bun check:prettier && bun check:typescript",
-    "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",
-    "check:typescript": "tsc"
-  },
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
-  "types": "./dist/esm/index.d.ts",
+  "type": "module",
   "exports": {
-    ".": "./dist/esm/index.js"
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.cjs",
+    "types": "./dist/esm/index.d.ts"
   },
   "files": [
     "/dist",
@@ -54,5 +42,16 @@
   },
   "peerDependencies": {
     "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "prepublishOnly": "bun build:all",
+    "build:all": "bun build:clean && bun build:dist:esm && bun build:dist:cjs && bun build:types",
+    "build:clean": "rimraf dist",
+    "build:dist:esm": "esbuild ./src/* --outdir=./dist/esm --format=esm",
+    "build:dist:cjs": "esbuild ./src/* --outdir=./dist/cjs --format=cjs --out-extension:.js=.cjs",
+    "build:types": "tsc ./src/* --outDir ./dist/esm --declaration --emitDeclarationOnly --skipLibCheck",
+    "check:all": "bun check:prettier && bun check:typescript",
+    "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",
+    "check:typescript": "tsc"
   }
 }

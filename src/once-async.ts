@@ -41,9 +41,6 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
     }
 
     const promise: Promise<Result> = new Promise((resolve, reject) => {
-      function listener() {
-        reject();
-      }
       const cleanup = bind(controller.signal, { type: 'abort', listener: () => reject() });
 
       fn.call(this, ...args)

@@ -14,10 +14,6 @@ export type CachedFn<TFunc extends (this: any, ...args: any[]) => any> = {
  *
  * cached('Alex'); // returns "Hello Alex"
  * cached('Sam'); // returns "Hello Alex" (underlying `sayHello` function not called)
- *
- * cached.clear();
- *
- * cached('Sam'); // returns "Hello Sam"
  */
 export function once<TFunc extends (...args: any[]) => any>(fn: TFunc): CachedFn<TFunc> {
   let cache: { value: ReturnType<TFunc> } | null = null;

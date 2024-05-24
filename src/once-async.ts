@@ -12,6 +12,23 @@ type State<T> =
   | { type: 'pending'; promise: Promise<T>; abort: () => void }
   | { type: 'fulfilled'; result: T };
 
+/**
+ * Creates a new function that will cache the result of it's first call.
+ *
+ * @example
+ * async function getUser() {
+ *   return fetch('/user').json();
+ * }
+ * const getUserOnce = once(getUser);
+ *
+ * const user1 = await getUserOnce();
+ * // returns result of `getUser()`
+ *
+ * const user2 = await getUserOnce();
+ * // `getUser()` not called, previously "fulfilled" value returned
+ *
+ * console.log(user1 === user2); // true
+ */
 export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
   fn: TFunc,
 ): CachedFn<TFunc> {

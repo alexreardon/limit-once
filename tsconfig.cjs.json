@@ -1,0 +1,25 @@
+{
+  // "extends": "./tsconfig.json",
+  // "compilerOptions": {
+  //   "outDir": "./dist/cjs",
+  //   "declaration": true,
+  //   "emitDeclarationOnly": true,
+  //   "noEmit": false,
+  //   "module": "CommonJS",
+  //   "verbatimModuleSyntax": false,
+  // },
+  "compilerOptions": {
+    "lib": [
+      "es2018"
+    ],
+    "outDir": "./dist/cjs",
+    "target": "es2018",
+    "module": "CommonJS",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true,
+  },
+  "include": [
+    "./src/*"
+  ]
+}

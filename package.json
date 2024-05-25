@@ -47,7 +47,7 @@
     "build:clean": "rimraf dist",
     "build:dist:esm": "esbuild ./src/* --outdir=./dist/esm --format=esm",
     "build:dist:cjs": "esbuild ./src/* --outdir=./dist/cjs --format=cjs --out-extension:.js=.cjs",
-    "build:types": "tsc ./src/* --outDir ./dist/esm --declaration --emitDeclarationOnly --skipLibCheck",
+    "build:types": "tsc --project ./tsconfig.esm.json",
     "check:all": "bun check:prettier && bun check:typescript",
     "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",
     "check:typescript": "tsc"

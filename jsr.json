@@ -1,0 +1,5 @@
+{
+  "name": "@alexreardon/limit-one",
+  "version": "0.8.0",
+  "exports": "./src/index.ts"
+}

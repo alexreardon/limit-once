@@ -130,6 +130,26 @@ test('joining a pending promise (which gets rejected)', (done) => {
   triggerReject();
 });
 
+test('should get the same promise back when "pending" and "fulfilled"', async () => {
+  let callCount = 0;
+  async function getCallCount(): Promise<string> {
+    return `Call count: ${++callCount}`;
+  }
+
+  const getCallCountOnce = onceAsync(getCallCount);
+
+  const promise1 = getCallCountOnce();
+
+  expect(await promise1).toBe('Call count: 1');
+
+  const promise2 = getCallCountOnce();
+
+  expect(await promise2).toBe('Call count: 1');
+
+  // same promise object returned
+  expect(promise1).toBe(promise2);
+});
+
 test('cache clearing (promise "settled")', async () => {
   let callCount = 0;
   function getCallCount(): Promise<number> {

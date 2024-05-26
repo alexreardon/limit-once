@@ -8,7 +8,7 @@ Gives you the ability to ensure a `function` is only called `"once"`, and that t
 Features:
 
 - [Synchronous variant](#synchronous-variant) (tiny `150B`)
-- [Asynchronous variant for promises](#asynchronous-variant) (tiny `372B`)
+- [Asynchronous variant for promises](#asynchronous-variant) (tiny `360B`)
 - Only include the code for the variant(s) you want
 - Both variants support cache clearing (avoid memory leaks)
 - Both variants respect `this` control

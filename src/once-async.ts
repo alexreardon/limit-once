@@ -10,7 +10,7 @@ export type CachedFn<TFunc extends (this: any, ...args: any[]) => Promise<any>> 
 type State<T> =
   | { type: 'initial' }
   | { type: 'pending'; promise: Promise<T>; abort: () => void }
-  | { type: 'fulfilled'; result: T };
+  | { type: 'fulfilled'; promise: Promise<T> };
 
 /**
  * Creates a new function that will cache the result of it's first call.
@@ -43,12 +43,9 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
     ...args: Parameters<TFunc>
   ): ReturnType<CachedFn<TFunc>> {
     if (state.type === 'fulfilled') {
-      // Doing a Promise.resolve() so that
-      // this function _always_ returns a promise.
-      return Promise.resolve(state.result);
+      return state.promise;
     }
 
-    // while the promise is pending, all folks
     if (state.type === 'pending') {
       return state.promise;
     }
@@ -64,7 +61,7 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
         .then((result: Result) => {
           state = {
             type: 'fulfilled',
-            result,
+            promise,
           };
           resolve(result);
         })

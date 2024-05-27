@@ -1,4 +1,4 @@
-name: Unit tests
+name: Run Checks
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  setup:
+  check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -21,15 +21,8 @@ jobs:
       - name: Install Dependencies
         run: bun install --frozen-lockfile
 
-      - run: bun test
+      - name: Unit tests
+        run: bun test
 
-  test:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - run: bun test
-  check:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - run: bun check
+      - name: Checks
+        run: bun check

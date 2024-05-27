@@ -8,11 +8,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test:
-    # The type of runner that the job will run on
+  setup:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -23,9 +20,13 @@ jobs:
 
       - name: Install Dependencies
         run: bun install --frozen-lockfile
-
-      - name: Run tests
-        run: bun test
-
-      - name: Run checks
-        run: bun check
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - run: bun test
+  check:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - run: bun check

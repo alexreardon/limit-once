@@ -6,17 +6,17 @@
     "type": "git",
     "url": "https://github.com/alexreardon/limit-once.git"
   },
-  "devDependencies": {
-    "@arethetypeswrong/cli": "^0.15.3",
-    "@types/bun": "latest",
-    "prettier": "^3.2.5",
-    "rimraf": "^5.0.7",
-    "tiny-invariant": "^1.3.3",
-    "tsup": "^8.0.2"
-  },
-  "peerDependencies": {
-    "typescript": "^5.4.5"
-  },
+  "keywords": [
+    "memoize",
+    "memoization",
+    "once",
+    "cache",
+    "performance"
+  ],
+  "license": "MIT",
+  "private": false,
+  "sideEffects": false,
+  "type": "module",
   "exports": {
     "types": {
       "import": "./dist/index.d.js",
@@ -33,15 +33,6 @@
     "/dist",
     "/src"
   ],
-  "keywords": [
-    "memoize",
-    "memoization",
-    "once",
-    "cache",
-    "performance"
-  ],
-  "license": "MIT",
-  "private": false,
   "scripts": {
     "prepublishOnly": "bun build:dist",
     "build:dist": "bun tsup",
@@ -51,6 +42,15 @@
     "check:typescript": "tsc",
     "check:dist": "attw --pack . --ignore-rules no-resolution"
   },
-  "sideEffects": false,
-  "type": "module"
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.15.3",
+    "@types/bun": "latest",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.7",
+    "tiny-invariant": "^1.3.3",
+    "tsup": "^8.0.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.4.5"
+  }
 }

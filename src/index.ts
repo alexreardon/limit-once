@@ -1,2 +1,2 @@
-export { once } from './once';
-export { onceAsync } from './once-async';
+export { once, type OncedFn } from './once';
+export { onceAsync, type OnceAsyncFn } from './once-async';

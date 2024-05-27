@@ -1,4 +1,8 @@
-export type CachedFn<TFunc extends (this: any, ...args: any[]) => any> = {
+export type OncedFn<TFunc extends (this: any, ...args: any[]) => any> = {
+  /**
+   * Clear the cached result.
+   * Allow the wrapped function (`TFunc`) to be called again
+   * */
   clear: () => void;
   (this: ThisParameterType<TFunc>, ...args: Parameters<TFunc>): ReturnType<TFunc>;
 };
@@ -15,7 +19,7 @@ export type CachedFn<TFunc extends (this: any, ...args: any[]) => any> = {
  * cached('Alex'); // returns "Hello Alex"
  * cached('Sam'); // returns "Hello Alex" (underlying `sayHello` function not called)
  */
-export function once<TFunc extends (...args: any[]) => any>(fn: TFunc): CachedFn<TFunc> {
+export function once<TFunc extends (...args: any[]) => any>(fn: TFunc): OncedFn<TFunc> {
   let cache: { value: ReturnType<TFunc> } | null = null;
 
   function result(this: ThisParameterType<TFunc>, ...args: Parameters<TFunc>): ReturnType<TFunc> {

@@ -2,7 +2,7 @@ type ResultValue<TFunc extends (this: any, ...args: any[]) => Promise<any>> = Aw
   ReturnType<TFunc>
 >;
 
-export type OncedFn<TFunc extends (this: any, ...args: any[]) => Promise<any>> = {
+export type OnceAsyncFn<TFunc extends (this: any, ...args: any[]) => Promise<any>> = {
   /**
    * Clear the cached `"fulfilled"` promise.
    * Allow the wrapped function (`TFunc`) to be called again
@@ -33,7 +33,7 @@ type State<T> =
  */
 export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
   fn: TFunc,
-): OncedFn<TFunc> {
+): OnceAsyncFn<TFunc> {
   type Result = ResultValue<TFunc>;
 
   let state: State<Result> = {
@@ -43,7 +43,7 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
   function onced(
     this: ThisParameterType<TFunc>,
     ...args: Parameters<TFunc>
-  ): ReturnType<OncedFn<TFunc>> {
+  ): ReturnType<OnceAsyncFn<TFunc>> {
     if (state.type === 'fulfilled') {
       return state.promise;
     }

@@ -25,4 +25,4 @@ jobs:
         run: bun test
 
       - name: Checks
-        run: bun check
+        run: bun check:all

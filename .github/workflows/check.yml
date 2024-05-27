@@ -18,19 +18,13 @@ jobs:
         with:
           bun-version: '1.1.10'
 
-      - name: Restore dependencies from cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-bun
+      # not using a dependency cache, as it did not speed up the github action
 
       - name: Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: Unit tests
+      - name: Run unit tests
         run: bun test
 
-      - name: Checks
+      - name: Run repo checks
         run: bun check:all

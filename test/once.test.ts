@@ -1,5 +1,6 @@
 import { expect, test } from 'bun:test';
 import { once } from '../src/once';
+import { expectTypeOf } from 'expect-type';
 
 test('single argument', () => {
   function greeting(name: string): string {
@@ -157,4 +158,25 @@ test('this binding (class property)', () => {
   const cached = once(person.getName);
 
   expect(cached()).toBe('Alex');
+});
+
+test('types', () => {
+  {
+    function sayHello(name: string): string {
+      return `Hello ${name}`;
+    }
+    const onced = once(sayHello);
+
+    expectTypeOf(onced).toMatchTypeOf<typeof sayHello>();
+  }
+
+  {
+    function getAge(this: { age: number }): number {
+      return this.age;
+    }
+    const onced = once(getAge);
+
+    expectTypeOf(onced).toMatchTypeOf<typeof onced>();
+    expectTypeOf<ThisParameterType<typeof getAge>>().toEqualTypeOf<ThisParameterType<typeof onced>>;
+  }
 });

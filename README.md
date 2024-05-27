@@ -1,5 +1,7 @@
 # limit-once
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/alexreardon/limit-once/check.yml?style=flat-square)
+
 Gives you the ability to ensure a `function` is only called `"once"`, and that that the result of that single `function` call is returned every time.
 
 > [!NOTE]

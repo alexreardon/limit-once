@@ -1,6 +1,7 @@
 import { expect, test, it } from 'bun:test';
 import { onceAsync } from '../src/once-async';
 import invariant from 'tiny-invariant';
+import { expectTypeOf } from 'expect-type';
 
 test('simple', async () => {
   async function greeting(name: string): Promise<string> {
@@ -278,4 +279,25 @@ test('cache clearing (promise "pending") - cleared sync after creation', async (
   expect(first.status).toBe('rejected');
   invariant(second.status === 'fulfilled');
   expect(second.value).toBe('Call count: 2');
+});
+
+test('types', () => {
+  {
+    async function sayHello(name: string): Promise<string> {
+      return `Hello ${name}`;
+    }
+    const onced = onceAsync(sayHello);
+
+    expectTypeOf(onced).toMatchTypeOf<typeof sayHello>();
+  }
+
+  {
+    async function getAge(this: { age: number }): Promise<number> {
+      return this.age;
+    }
+    const onced = onceAsync(getAge);
+
+    expectTypeOf(onced).toMatchTypeOf<typeof onced>();
+    expectTypeOf<ThisParameterType<typeof getAge>>().toEqualTypeOf<ThisParameterType<typeof onced>>;
+  }
 });

@@ -27,7 +27,7 @@
   },
   "description": "Remember the first result of a function call",
   "engines": {
-    "bun": ">=1.1.8"
+    "bun": ">=1.1.10"
   },
   "files": [
     "/dist",

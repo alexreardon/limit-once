@@ -297,7 +297,7 @@ test('types', () => {
     }
     const onced = onceAsync(getAge);
 
-    expectTypeOf(onced).toMatchTypeOf<typeof onced>();
+    expectTypeOf(onced).toMatchTypeOf<typeof getAge>();
     expectTypeOf<ThisParameterType<typeof getAge>>().toEqualTypeOf<ThisParameterType<typeof onced>>;
   }
 });

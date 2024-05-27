@@ -2,7 +2,11 @@ type ResultValue<TFunc extends (this: any, ...args: any[]) => Promise<any>> = Aw
   ReturnType<TFunc>
 >;
 
-export type CachedFn<TFunc extends (this: any, ...args: any[]) => Promise<any>> = {
+export type OncedFn<TFunc extends (this: any, ...args: any[]) => Promise<any>> = {
+  /**
+   * Clear the cached `"fulfilled"` promise.
+   * Allow the wrapped function (`TFunc`) to be called again
+   * */
   clear: () => void;
   (this: ThisParameterType<TFunc>, ...args: Parameters<TFunc>): Promise<ResultValue<TFunc>>;
 };
@@ -22,16 +26,14 @@ type State<T> =
  * const getUserOnce = once(getUser);
  *
  * const user1 = await getUserOnce();
- * // returns result of `getUser()`
+ * // returns "fulfilled" `getUser()` promise value
  *
  * const user2 = await getUserOnce();
  * // `getUser()` not called, previously "fulfilled" value returned
- *
- * console.log(user1 === user2); // true
  */
 export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
   fn: TFunc,
-): CachedFn<TFunc> {
+): OncedFn<TFunc> {
   type Result = ResultValue<TFunc>;
 
   let state: State<Result> = {
@@ -41,7 +43,7 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
   function onced(
     this: ThisParameterType<TFunc>,
     ...args: Parameters<TFunc>
-  ): ReturnType<CachedFn<TFunc>> {
+  ): ReturnType<OncedFn<TFunc>> {
     if (state.type === 'fulfilled') {
       return state.promise;
     }
@@ -50,8 +52,9 @@ export function onceAsync<TFunc extends (...args: any[]) => Promise<any>>(
       return state.promise;
     }
 
-    let rejectPendingPromise: (() => void) | null;
+    let rejectPendingPromise: ((reason?: any) => void) | null;
     function abort() {
+      // TODO: should we reject with an error?
       rejectPendingPromise?.();
     }
 

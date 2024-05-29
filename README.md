@@ -82,7 +82,7 @@ expect(maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 expect(maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 ```
 
-### Cache clearing (`.clear()`)
+### Cache clearing (`once(fn).clear()`)
 
 You can clear the cache of a onced function by using the `.clear()` function property.
 
@@ -181,16 +181,17 @@ export const getPermissionsOnce = onceAsync(getPermissions);
 
 const promise1 = getPermissionsOnce();
 
-// This second call to `getPermissionsOnce` while the `getPermissions` promise
+// This second call to `getPermissionsOnce()` while the `getPermissions()` promise
 // is still "pending" will return the same promise that the first call created.
+// `fetch` is only called once
 const promise2 = getPermissionsOnce();
 
 console.log(promise1 === promise2); // "true"
 ```
 
-### Cache clearing (`.clear()`)
+### Cache clearing (`onceAsync(fn).clear()`)
 
-You can clear the cache of a onced async function by using the `.clear()` function property.
+You can clear the cache of a `onceAsync` function by using the `.clear()` function property.
 
 ```ts
 import { onceAsync } from 'limit-once';

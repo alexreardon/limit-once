@@ -2,9 +2,9 @@
   "compilerOptions": {
     // Enable latest features
     "lib": [
-      "es2022"
+      "ES6"
     ],
-    "target": "es2022",
+    "target": "ES6",
     "module": "ESNext",
     "moduleDetection": "force",
     "allowJs": false,

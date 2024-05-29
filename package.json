@@ -44,7 +44,7 @@
   "private": false,
   "scripts": {
     "prepublishOnly": "bun build:dist",
-    "build:dist": "bun tsup",
+    "build:dist": "bun build:clean && bun tsup",
     "build:clean": "rimraf ./dist",
     "check:all": "bun check:prettier && bun check:typescript && bun check:dist",
     "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",

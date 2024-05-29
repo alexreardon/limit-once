@@ -55,6 +55,9 @@ getGreetingOnce('Greg');
 // "Hello Alex" is returned from the cache.
 ```
 
+> [!NOTE]
+> If you want the wrapped function to cache the result, but recompute the result when the arguments change: use [`memoize-one`](https://github.com/alexreardon/memoize-one)
+
 ### Only successful calls are cached
 
 If the function being wrapped `throw`s an error, then that `throw` is not cached, and the wrapped function is allowed to be called again

@@ -55,6 +55,8 @@ getGreetingOnce('Greg');
 // "Hello Alex" is returned from the cache.
 ```
 
+### Only successful calls are cached
+
 If the function being wrapped `throw`s an error, then that `throw` is not cached, and the wrapped function is allowed to be called again
 
 ```ts
@@ -135,6 +137,8 @@ const user1 = await getPermissionsOnce();
 const user2 = await getPermissionsOnce();
 ```
 
+### Only `"fulfilled"` `Promises` are cached
+
 If the wrapped function has it's `Promise` `"rejected"`, then the `"rejected"` `Promise` will not be cached, and the underlying function can be called again.
 
 ```ts
@@ -162,9 +166,9 @@ expect(await maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 expect(await maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 ```
 
-### `"pending"` `Promise` joining
+### Calls while a `Promise` is `"pending"`
 
-If multiple calls are made to the onced function while the original `Promise` is still `"pending"`, then the original `Promise` is re-used.
+If multiple calls are made to a `onceAsync(fn)` function while the original `Promise` is still `"pending"`, then the original `Promise` is re-used.
 
 ✨ This prevents multiple calls to the underlying function ✨
 
@@ -183,7 +187,7 @@ const promise1 = getPermissionsOnce();
 
 // This second call to `getPermissionsOnce()` while the `getPermissions()` promise
 // is still "pending" will return the same promise that the first call created.
-// `fetch` is only called once
+// `fetch` is only called once (by the first call)
 const promise2 = getPermissionsOnce();
 
 console.log(promise1 === promise2); // "true"

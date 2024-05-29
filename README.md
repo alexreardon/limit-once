@@ -1,8 +1,8 @@
 # limit-once
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/alexreardon/limit-once/check.yml?style=flat-square)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/alexreardon/limit-once/check.yml)
 
-Gives you the ability to ensure a `function` is only called `"once"`, and that that the result of that single `function` call is returned every time.
+Cache the first successful result of a function call.
 
 > [!NOTE]
 > This package is still under construction
@@ -31,7 +31,7 @@ bun add limit-once
 
 ## Synchronous variant
 
-Create a new `function` that wraps an existing function, where the wrapped function is only called once.
+Create a new `function` that wraps an existing `function`, where the wrapped function is only called once.
 
 ```ts
 import { once } from 'limit-once';
@@ -118,22 +118,24 @@ Our async variant allows you to have a `once` functionality for functions that `
 ```ts
 import { onceAsync } from 'limit-once';
 
-async function getLoggedInUser() {
-  await fetch('/user').json();
+async function getPermissions(): Promise<Record<string, boolean>> {
+  // Note: could use "zod" to validate response shape
+  const response = await fetch('/permissions');
+  return await response.json();
 }
 
-// We don't want every call to `getLoggedInUser()` to call `fetch` again.
+// We don't want every call to `getPermissions()` to call `fetch` again.
 // Ideally we would store the result of the first successful call and return that!
 
-const getLoggedInUserOnce = onceAsync(getLoggedInUser);
+const getPermissionsOnce = onceAsync(getPermissions);
 
-const user1 = await getLoggedInUserOnce();
+const user1 = await getPermissionsOnce();
 
 // subsequent calls won't call fetch, and will return the previously fulfilled promise value.
-const user2 = await getLoggedInUserOnce();
+const user2 = await getPermissionsOnce();
 ```
 
-If the wrapped function that returns a promise has it's promise `"rejected"`, then the call will not be cached, and the underlying function can be called again.
+If the wrapped function has it's `Promise` `"rejected"`, then the `"rejected"` `Promise` will not be cached, and the underlying function can be called again.
 
 ```ts
 import { onceAsync } from 'limit-once';
@@ -160,22 +162,28 @@ expect(await maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 expect(await maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 ```
 
-If multiple calls are made to the onced function while the original promise is still `"pending"`, then the original promise is re-used. This prevents multiple calls to the underlying function.
+### `"pending"` `Promise` joining
+
+If multiple calls are made to the onced function while the original `Promise` is still `"pending"`, then the original `Promise` is re-used.
+
+✨ This prevents multiple calls to the underlying function ✨
 
 ```ts
 import { onceAsync } from 'limit-once';
 
-async function getLoggedInUser() {
-  await fetch('/user').json();
+async function getPermissions(): Promise<Record<string, boolean>> {
+  // Note: could use "zod" to validate response shape
+  const response = await fetch('/permissions');
+  return await response.json();
 }
 
-export const getLoggedInUserOnce = onceAsync(getLoggedInUser);
+export const getPermissionsOnce = onceAsync(getPermissions);
 
-const promise1 = getLoggedInUserOnce();
+const promise1 = getPermissionsOnce();
 
-// This second call to `getLoggedInUserOnce` while the `getLoggedInUser` promise
+// This second call to `getPermissionsOnce` while the `getPermissions` promise
 // is still "pending" will return the same promise that the first call created.
-const promise2 = getLoggedInUserOnce();
+const promise2 = getPermissionsOnce();
 
 console.log(promise1 === promise2); // "true"
 ```

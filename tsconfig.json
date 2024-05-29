@@ -4,6 +4,8 @@
     "lib": [
       "ES6"
     ],
+    // targeting es6 rather than es2022 as not
+    // all environments support nullish coalescing right now `?.`
     "target": "ES6",
     "module": "ESNext",
     "moduleDetection": "force",

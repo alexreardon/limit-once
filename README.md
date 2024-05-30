@@ -31,7 +31,7 @@ bun add limit-once
 
 ## Synchronous variant
 
-Create a new `function` that wraps an existing `function`, where the wrapped function is only called once.
+Create a new `function` that only allows an existing `function` to be called once.
 
 ```ts
 import { once } from 'limit-once';
@@ -89,7 +89,7 @@ expect(maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 
 ### Cache clearing (`once(fn).clear()`)
 
-You can clear the cache of a onced function by using the `.clear()` function property.
+You can clear the cache of a onced `function` by using the `.clear()` `function` property.
 
 ```ts
 import { once } from 'limit-once';
@@ -118,7 +118,7 @@ getGreetingOnce('Greg');
 
 ## Asynchronous variant
 
-Our async variant allows you to have a `once` functionality for functions that `Promise`.
+Allows you to have a `once` functionality for a `function` that returns a `Promise`.
 
 ```ts
 import { onceAsync } from 'limit-once';
@@ -142,7 +142,7 @@ const user2 = await getPermissionsOnce();
 
 ### Only `"fulfilled"` `Promises` are cached
 
-If the wrapped function has it's `Promise` `"rejected"`, then the `"rejected"` `Promise` will not be cached, and the underlying function can be called again.
+If the wrapped `function` has it's `Promise` `"rejected"`, then the `"rejected"` `Promise` will not be cached, and the underlying `function` can be called again.
 
 ```ts
 import { onceAsync } from 'limit-once';
@@ -171,9 +171,9 @@ expect(await maybeThrowOnce({ shouldThrow: false })).toBe('Call count: 3');
 
 ### Calls while a `Promise` is `"pending"`
 
-If multiple calls are made to a `onceAsync(fn)` function while the original `Promise` is still `"pending"`, then the original `Promise` is re-used.
+If multiple calls are made to a `onceAsync(fn)` `function` while the original `Promise` is still `"pending"`, then the original `Promise` is re-used.
 
-✨ This prevents multiple calls to the underlying function ✨
+✨ This prevents multiple calls to the underlying `function` ✨
 
 ```ts
 import { onceAsync } from 'limit-once';
@@ -198,7 +198,7 @@ console.log(promise1 === promise2); // "true"
 
 ### Cache clearing (`onceAsync(fn).clear()`)
 
-You can clear the cache of a `onceAsync` function by using the `.clear()` function property.
+You can clear the cache of a `onceAsync` `function` by using the `.clear()` `function` property.
 
 ```ts
 import { onceAsync } from 'limit-once';

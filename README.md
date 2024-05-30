@@ -2,7 +2,7 @@
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/alexreardon/limit-once/check.yml)
 
-Cache the first successful result of a function call.
+Cache the first successful result of a `function` call.
 
 > [!NOTE]
 > This package is still under construction

@@ -242,3 +242,9 @@ getNameOnce.clear();
 // console.log → "rejected promise 1"
 // console.log → "rejected promise 2"
 ```
+
+## Outputs
+
+- `limit-once` is a [dual package](https://nodejs.org/api/packages.html#dual-commonjses-module-packages) that supports ECMAScript modules (esm) and CommonJS (cjs)
+- Distributed files are [compiled to "es6"](https://www.typescriptlang.org/tsconfig/#target) which has [wide support](https://caniuse.com/?search=es6)
+- Internet Explorer 11 not supported (it does not support "es6")

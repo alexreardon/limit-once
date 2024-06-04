@@ -4,10 +4,7 @@
 
 Cache the first successful result of a `function` call.
 
-> [!NOTE]
-> This package is still under construction
-
-Features:
+Features
 
 - [Synchronous variant](#synchronous-variant) (tiny `150B`)
 - [Asynchronous variant for promises](#asynchronous-variant) (tiny `360B`)

@@ -281,6 +281,97 @@ test('cache clearing (promise "pending") - cleared sync after creation', async (
   expect(second.value).toBe('Call count: 2');
 });
 
+test('this binding (.call)', async () => {
+  async function getName(this: { name: string }): Promise<string> {
+    return `name: ${this.name}`;
+  }
+  const cached = onceAsync(getName);
+
+  expect(await cached.call({ name: 'Alex' })).toBe('name: Alex');
+});
+
+test('this binding (.apply)', async () => {
+  async function getName(this: { name: string }): Promise<string> {
+    return `name: ${this.name}`;
+  }
+  const cached = onceAsync(getName);
+
+  expect(await cached.apply({ name: 'Alex' })).toBe('name: Alex');
+});
+
+test('this binding (.bind)', async () => {
+  async function getName(this: { name: string }): Promise<string> {
+    return `name: ${this.name}`;
+  }
+  const bound = getName.bind({ name: 'Alex' });
+  const cached = onceAsync(bound);
+
+  expect(await cached()).toBe('name: Alex');
+});
+
+test('this binding (implicit)', async () => {
+  async function getName(this: { name: string }): Promise<string> {
+    return `name: ${this.name}`;
+  }
+  const cached = onceAsync(getName);
+  const person = {
+    name: 'Alex',
+    getName: cached,
+  };
+
+  expect(await person.getName()).toBe('name: Alex');
+});
+
+test('this binding (arrow function)', async () => {
+  let callCount = 0;
+  function outer(this: { name: string }) {
+    // lock inner scope to parent scope
+    return async () => {
+      callCount++;
+      return `name: ${this.name}. call count: ${callCount}`;
+    };
+  }
+  const result = outer.call({ name: 'Alex' });
+  const cached = onceAsync(result);
+
+  expect(await cached()).toBe('name: Alex. call count: 1');
+  expect(await cached()).toBe('name: Alex. call count: 1');
+});
+
+test('this binding (class constructor)', async () => {
+  class Person {
+    name: string;
+    constructor(name: string) {
+      this.name = name;
+    }
+  }
+
+  const onced = onceAsync(async function create(name: string) {
+    return new Person(name);
+  });
+
+  const result = await onced('Alex');
+
+  expect(result).toBeInstanceOf(Person);
+  expect(result.name).toBe('Alex');
+});
+
+test('this binding (class property)', async () => {
+  class Person {
+    #name: string;
+    constructor(name: string) {
+      this.#name = name;
+    }
+    getName = async () => {
+      return this.#name;
+    };
+  }
+  const person = new Person('Alex');
+  const cached = onceAsync(person.getName);
+
+  expect(await cached()).toBe('Alex');
+});
+
 test('types', () => {
   {
     async function sayHello(name: string): Promise<string> {

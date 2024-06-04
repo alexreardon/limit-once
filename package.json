@@ -14,8 +14,7 @@
     "cache",
     "limit",
     "performance",
-    "memoize",
-    "memoization"
+    "rate limit"
   ],
   "sideEffects": false,
   "type": "module",

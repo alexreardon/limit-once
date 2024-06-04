@@ -144,6 +144,24 @@ test('this binding (arrow function)', () => {
   expect(cached()).toBe('name: Alex. call count: 1');
 });
 
+test('this binding (class constructor)', () => {
+  class Person {
+    name: string;
+    constructor(name: string) {
+      this.name = name;
+    }
+  }
+
+  const onced = once(function create(name: string) {
+    return new Person(name);
+  });
+
+  const result = onced('Alex');
+
+  expect(result).toBeInstanceOf(Person);
+  expect(result.name).toBe('Alex');
+});
+
 test('this binding (class property)', () => {
   class Person {
     #name: string;

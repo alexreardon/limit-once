@@ -19,8 +19,8 @@
     "noUnusedParameters": true,
     "noPropertyAccessFromIndexSignature": true,
     /* for bun */
-    "module": "preserve",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noEmit": true,
   }
 }

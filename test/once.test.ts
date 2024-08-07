@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { once } from '../src/once';
+import { once } from '../src/once.js';
 import { expectTypeOf } from 'expect-type';
 
 test('single argument', () => {

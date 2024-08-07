@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { onceAsync } from '../src/once-async';
+import { onceAsync } from '../src/once-async.js';
 import invariant from 'tiny-invariant';
 import { expectTypeOf } from 'expect-type';
 

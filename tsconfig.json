@@ -1,27 +1,26 @@
 {
   "compilerOptions": {
-    // Enable latest features
+    /* Base Options: */
     "lib": [
-      "ES6"
+      "es2022"
     ],
-    // targeting es6 rather than es2022 as not
-    // all environments support nullish coalescing right now `?.`
-    "target": "ES6",
-    "module": "ESNext",
-    "moduleDetection": "force",
+    "target": "es2022",
     "allowJs": false,
-    // Bundler mode
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
-    // Best practices
-    "strict": true,
     "skipLibCheck": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
-    // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
+    /* for bun */
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "noEmit": true,
   }
 }

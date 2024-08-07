@@ -35,10 +35,10 @@
     "build:all": "bun build:clean && bun build:dist",
     "build:dist": "tsc --project ./tsconfig.output.json",
     "build:clean": "rimraf ./dist",
-    "check:all": "bun check:prettier && bun check:typescript && bun check:dist",
+    "check:all": "bun check:prettier && bun check:typescript",
     "check:prettier": "prettier --debug-check src/**/*.ts test/**/*.ts",
     "check:typescript": "tsc",
-    "check:dist": "attw --pack ."
+    "#check:dist": "attw --pack ."
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.15.3",

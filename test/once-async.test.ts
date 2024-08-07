@@ -1,4 +1,4 @@
-import { expect, test, it } from 'bun:test';
+import { expect, test } from 'bun:test';
 import { onceAsync } from '../src/once-async';
 import invariant from 'tiny-invariant';
 import { expectTypeOf } from 'expect-type';

@@ -13,6 +13,12 @@ Features
 - Both variants respect `this` control
 - Full `TypeScript` support
 
+## Support
+
+- This is an [ECMAScript only package](https://nodejs.org/api/esm.html#modules-ecmascript-modules)
+- Built for [es2022](https://caniuse.com/sr_es13)
+- Node@16+ support
+
 ## Installation
 
 ```bash

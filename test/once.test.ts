@@ -12,11 +12,11 @@ test('single argument', () => {
 
 test('single argument (falsey return)', () => {
   let callCount = 0;
-  function returnFalse() {
+  function returnUndefined() {
     callCount++;
     return undefined;
   }
-  const cached = once(returnFalse);
+  const cached = once(returnUndefined);
 
   expect(cached()).toBe(undefined);
   expect(callCount).toBe(1);
@@ -76,8 +76,6 @@ test('if the function throws, the cache should not be set', () => {
 
   expect(() => cached({ shouldThrow: true })).toThrowError('Call count: 1');
   expect(() => cached({ shouldThrow: true })).toThrowError('Call count: 2');
-
-  cached.clear();
 
   // now cache will be applied
   expect(cached({ shouldThrow: false })).toBe('Call count: 3');
